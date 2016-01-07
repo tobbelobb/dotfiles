@@ -185,7 +185,7 @@ endif
 " For quick Python compilation. I actually never use Python...
 " map <F2> :w\|!python % <Return>
 
-" Tab shortcut
+" Increase numbers by 0, 1, 2, ...
 function! Incr()
   let a = line('.') - line("'<")
   let c = virtcol("'<")
@@ -194,7 +194,11 @@ function! Incr()
   endif
   normal `<
 endfunction
+" Think Ascendning
 vnoremap <C-a> :call Incr()<CR>
+
+" Tab shortcut
+inoremap <S-Tab> <C-V><Tab>
 
 " Often type spit when I mean split. This autocorrects for me
 cnoreabbrev spit split
