@@ -1,6 +1,9 @@
 # SSH'ing one.com-server majaogtorbjornsbryllup.com
 ssh majaogtorbjornsbryllup.com@ssh.majaogtorbjornsbryllup.com
 
+# ftp'ing one.com-server vitana.se
+sftp vitana.se@ssh.vitana.se
+
 # Setting up computer for git communication with one.com-server majaogtorbjornsbryllup.com
 ssh-keygen -t rsa
 cat ~/.ssh/id_rsa.pub | ssh majaogtorbjornsbryllup.com@ssh.majaogtorbjornsbryllup.com "cat >>  ~/.ssh/authorized_keys"
@@ -12,8 +15,11 @@ git remote set-url origin ssh://majaogtorbjornsbryllup.com@ssh.majaogtorbjornsbr
 # Checking installed packages and sizes
 dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n > sizes.txt
 
-# ftp'ing one.com-server vitana.se
-sftp vitana.se@ssh.vitana.se
+# Create ogg audio from a mp4 file
+ffmpeg -i input.mp4 -vn -acodec libvorbis -y output.ogg
+
+# Create webm video from a mp4 file
+avconv -i in.mp4 -vcodec libvpx -crf 10 -b:v 1M -acodec libvorbis -qscale:a 5 out.webm
 
 # Slicing movie file
 avconv -i in.mp4 -vcodec copy -acodec copy -ss 00:00:00 -t 00:01:40 out.mp4
@@ -23,3 +29,6 @@ convert -resize 500 in.png out.png
 
 # Tracking development of file lines per day
 git log --numstat --pretty="%H" produktrapport.tex > commitstats_produktrapport.data
+
+# List all files #included in C code
+ack --cc '#include\s+<(.*)>' --output '$1' -h
