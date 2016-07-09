@@ -139,3 +139,9 @@ export LC_TIME=nb_NO.utf8
 alias idag='cal; calendar -f ~/GTD/calendar.personal; echo; echo "Filer:"; l ~/GTD/tickle/`date +%d` ~/GTD/tickle/`date +%B`;'
 # Remind me what to do today
 idag
+
+# Get quicker access to GTD
+alias In='vim /home/torbjorn/GTD/In'
+alias Göra='vim /home/torbjorn/GTD/Göra'
+alias Gøra='vim /home/torbjorn/GTD/Göra'
+
