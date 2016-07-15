@@ -145,3 +145,5 @@ alias In='vim /home/torbjorn/GTD/In'
 alias Göra='vim /home/torbjorn/GTD/Göra'
 alias Gøra='vim /home/torbjorn/GTD/Göra'
 
+# Check which folders take up the most space here
+alias dirsizes='du -sh ./* | sort'
