@@ -145,3 +145,5 @@ alias In='vim /home/torbjorn/GTD/In'
 alias Göra='vim /home/torbjorn/GTD/Göra'
 alias Gøra='vim /home/torbjorn/GTD/Göra'
 
+# Roswell lisp organizer saves scripts here:
+export PATH=$PATH:$HOME/.roswell/bin
