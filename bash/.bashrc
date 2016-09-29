@@ -147,3 +147,6 @@ alias Gøra='vim /home/torbjorn/GTD/Göra'
 
 # Roswell lisp organizer saves scripts here:
 export PATH=$PATH:$HOME/.roswell/bin
+
+# Check which folders take up the most space here
+alias dirsizes='du -sh ./* | sort -h'
