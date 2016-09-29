@@ -84,10 +84,10 @@ setlocal spelllang=sv
 " lisp stuff
 let g:lisp_rainbow=1
 " The command to start swank. Helping slimv a bit
-let g:slimv_swank_cmd = '! xterm -e sbcl --load /home/torbjorn/.vim/slime/start-swank.lisp &'
+" let g:slimv_swank_cmd = '! xterm -e sbcl --load /home/torbjorn/.vim/slime/start-swank.lisp &'
 " Other possible swanks
 " let g:slimv_swank_cmd = '! xterm -e sbcl --load  /usr/share/common-lisp/source/slime/start-swank.lisp &'
-" let g:slimv_swank_cmd = '! xterm -e sbcl --load  /home/torbjorn/quicklisp/dists/quicklisp/software/slime-20131211-cvs/start-swank.lisp &'
+ let g:slimv_swank_cmd = '! xterm -e sbcl --load  /home/torbjorn/quicklisp/dists/quicklisp/software/slime-v2.18/start-swank.lisp &'
 let paredit_mode=0
 " A little larger blocks is faster when lots of data is sent, and not very slow otherwise
 let g:swank_block_size = 65536
@@ -228,3 +228,15 @@ autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 au InsertEnter * hi StatusLine ctermfg=Red
 au InsertLeave * hi StatusLine ctermfg=Green
 hi StatusLine ctermfg=Green
+
+" Underline and overline characters
+" modify selected text using combining diacritics
+command! -range -nargs=0 Overline        call s:CombineSelection(<line1>, <line2>, '0305')
+command! -range -nargs=0 Underline       call s:CombineSelection(<line1>, <line2>, '0332')
+command! -range -nargs=0 DoubleUnderline call s:CombineSelection(<line1>, <line2>, '0333')
+command! -range -nargs=0 Strikethrough   call s:CombineSelection(<line1>, <line2>, '0336')
+
+function! s:CombineSelection(line1, line2, cp)
+  execute 'let char = "\u'.a:cp.'"'
+  execute a:line1.','.a:line2.'s/\%V[^[:cntrl:]]/&'.char.'/ge'
+endfunction
