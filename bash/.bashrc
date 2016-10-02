@@ -115,14 +115,11 @@ fi
 
 export OPENSCADPATH="/home/torbjorn/Desktop/VanityRepRap/Hangprinter/Thingiverse-Projects/ThreadedLibrary/"
 
-PATH=$PATH:/home/torbjorn/scripts
 
-PATH=$PATH:/home/torbjorn/scripts/init-rapport:/home/torbjorn/scripts/init-physrap
 alias show='mupdf rap.pdf &'
 alias raptabs='gnome-terminal --tab --title "1 Vim Source" --tab --title "2 Generate/Collect data" --tab --title "3 Vim Gnuplot" --tab --title "4 Gnuplot" --tab --title "5 Vim rap.tex" --tab --title "6 make, git, mupdf"; exit'
 alias reptabs='raptabs'
 
-PATH=$PATH:/home/torbjorn/scripts/tor-browser_en-US
 #alias firefox='start-tor-browser'
 alias vi='vim'
 alias e='vim'
@@ -146,7 +143,13 @@ alias Göra='vim /home/torbjorn/GTD/Göra'
 alias Gøra='vim /home/torbjorn/GTD/Göra'
 
 # Roswell lisp organizer saves scripts here:
-export PATH=$PATH:$HOME/.roswell/bin
 
 # Check which folders take up the most space here
 alias dirsizes='du -sh ./* | sort -h'
+alias spacemacs='emacs'
+
+# These should go in .bash_profile, but that file is so hard to reload!
+PATH=$PATH:/home/torbjorn/scripts
+PATH=$PATH:/home/torbjorn/scripts/init-rapport:/home/torbjorn/scripts/init-physrap
+PATH=$PATH:/home/torbjorn/scripts/tor-browser_en-US
+export PATH=$PATH:$HOME/.roswell/bin
