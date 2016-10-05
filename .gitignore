@@ -5,3 +5,6 @@ vim/.vim/undo
 vim/.vim/viminfo
 vim/.vim/.netrwhist
 vim/.vim/plugin_graveyard
+
+emacs/.emacs.d
+emacs/.emacs.d/*
