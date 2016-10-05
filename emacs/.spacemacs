@@ -316,36 +316,97 @@ you should place your code here."
 
   ;; Map øø to escape insert mode in insert mode
   ;; TODO: Doesn't work for some reason. Using default "fd" instead
-  ;(setq evil-escape-key-sequence (kbd "øø"))
+                                        ;(setq evil-escape-key-sequence (kbd "øø"))
 
-  ;; Jump between windows with tab when in command/normal mode
-  ;; TODO: Doesn't work for some reason. Use default SPC w w instead
-  ;(define-key evil-normal-state-map <backtab> 'next-multiframe-window)
-
-  ;; Save file from normal mode with Ø/Ö
+  ;; Save file from normal mode with Ø/Ö/ø/ö
   (define-key evil-normal-state-map "Ø" 'save-buffer)
   (define-key evil-normal-state-map "Ö" 'save-buffer)
+  (define-key evil-normal-state-map "ø" 'save-buffer)
+  (define-key evil-normal-state-map "ö" 'save-buffer)
 
-  ;; Jump between windows simpler when in evil-normal-state
-  ;; Tab and Caps Lock are treated equally
+  ;; Jump between windows with caps lock
   ;; Holding shift when pressing either cycles backwards instead of forwards
-  ;(define-key evil-normal-state-map [tab] 'next-multiframe-window)
-  ;(define-key evil-normal-state-map [backtab] 'previous-multiframe-window)
   (if (eq window-system 'x)
       (shell-command "xmodmap -e 'clear Lock' -e 'keycode 66 = F13'"))
-  (define-key evil-normal-state-map [f13] 'next-multiframe-window)
-  (define-key evil-normal-state-map (kbd "<S-f13>") 'previous-multiframe-window)
+  (global-set-key [f13] 'next-multiframe-window)
+  (global-set-key (kbd "<S-f13>") 'previous-multiframe-window)
 
-  ;; TODO: can't make this work...
+  ;; Make backtab insert an actual tab character when in insert state
   (defun my-insert-tab ()
     (interactive)
-    (quoted-insert (kbd "\t")))
+    (insert "	"))
   (define-key evil-insert-state-map [backtab] 'my-insert-tab)
 
   ;; Make org mode not indent on tab...
-  (setq spacemacs-indent-sensitive-modes 'org)
+  ;(setq spacemacs-indent-sensitive-modes 'org) 
+  ;; Above line doesn't place cursor on bullet on tab
   ;; Why doesn't tab org-cycle ??
+  ;; Sometimes it does...
+
+  ;; Strict mode refuses to delete parens sometimes
+  ;(turn-on-smartparens-strict-mode)
+  ;; Use SPC tp to toggle smartparen
+
+  ;; use vaws" as in visual all word surround double-tick to surround something in double-tick
+
+  ;; TODO: Would like unimpaired leader key to be duplicated.
+  ;; [ and ] are simply too hard to remember and to get at
+  ;; It would be easier to remember <left>, 8 and <up> instead of [
+  ;; and <right>, 9 and <down> instead of ]
+  ;; The following is copy-pasted from evil-unimpaired.el
+  (define-key evil-normal-state-map (kbd "8 SPC") 'evil-unimpaired/insert-space-above)
+  (define-key evil-normal-state-map (kbd "9 SPC") 'evil-unimpaired/insert-space-below)
+  (define-key evil-normal-state-map (kbd "8 e") 'move-text-up)
+  (define-key evil-normal-state-map (kbd "9 e") 'move-text-down)
+  (define-key evil-visual-state-map (kbd "8 e") ":move'<--1")
+  (define-key evil-visual-state-map (kbd "9 e") ":move'>+1")
+  (define-key evil-normal-state-map (kbd "8 b") 'previous-buffer)
+  (define-key evil-normal-state-map (kbd "9 b") 'next-buffer)
+  (define-key evil-normal-state-map (kbd "8 f") 'evil-unimpaired/previous-file)
+  (define-key evil-normal-state-map (kbd "9 f") 'evil-unimpaired/next-file)
+  (define-key evil-normal-state-map (kbd "9 l") 'spacemacs/next-error)
+  (define-key evil-normal-state-map (kbd "8 l") 'spacemacs/previous-error)
+  (define-key evil-normal-state-map (kbd "9 q") 'spacemacs/next-error)
+  (define-key evil-normal-state-map (kbd "8 q") 'spacemacs/previous-error)
+  (define-key evil-normal-state-map (kbd "8 t") 'evil-unimpaired/previous-frame)
+  (define-key evil-normal-state-map (kbd "9 t") 'evil-unimpaired/next-frame)
+  (define-key evil-normal-state-map (kbd "8 w") 'previous-multiframe-window)
+  (define-key evil-normal-state-map (kbd "9 w") 'next-multiframe-window)
+  (define-key evil-normal-state-map (kbd "8 p") 'evil-unimpaired/paste-above) ; paste above or below with newline
+  (define-key evil-normal-state-map (kbd "9 p") 'evil-unimpaired/paste-below)
+  ;; If no <left> and <right> keys in helm gets irritating, just remove these
+  (define-key evil-normal-state-map (kbd "<left> SPC") 'evil-unimpaired/insert-space-above)
+  (define-key evil-normal-state-map (kbd "<right> SPC") 'evil-unimpaired/insert-space-below)
+  (define-key evil-normal-state-map (kbd "<left> e") 'move-text-up)
+  (define-key evil-normal-state-map (kbd "<right> e") 'move-text-down)
+  (define-key evil-visual-state-map (kbd "<left> e") ":move'<--1")
+  (define-key evil-visual-state-map (kbd "<right> e") ":move'>+1")
+  (define-key evil-normal-state-map (kbd "<left> b") 'previous-buffer)
+  (define-key evil-normal-state-map (kbd "<right> b") 'next-buffer)
+  (define-key evil-normal-state-map (kbd "<left> f") 'evil-unimpaired/previous-file)
+  (define-key evil-normal-state-map (kbd "<right> f") 'evil-unimpaired/next-file)
+  (define-key evil-normal-state-map (kbd "<right> l") 'spacemacs/next-error)
+  (define-key evil-normal-state-map (kbd "<left> l") 'spacemacs/previous-error)
+  (define-key evil-normal-state-map (kbd "<right> q") 'spacemacs/next-error)
+  (define-key evil-normal-state-map (kbd "<left> q") 'spacemacs/previous-error)
+  (define-key evil-normal-state-map (kbd "<left> t") 'evil-unimpaired/previous-frame)
+  (define-key evil-normal-state-map (kbd "<right> t") 'evil-unimpaired/next-frame)
+  (define-key evil-normal-state-map (kbd "<left> w") 'previous-multiframe-window)
+  (define-key evil-normal-state-map (kbd "<right> w") 'next-multiframe-window)
+  (define-key evil-normal-state-map (kbd "<left> p") 'evil-unimpaired/paste-above) ; paste above or below with newline
+  (define-key evil-normal-state-map (kbd "<right> p") 'evil-unimpaired/paste-below)
+
+  ;; Toggle centered cursor mini-mode with SPC t -
+  ;; Use auto-completion and flycheck layer when I get home to the Internet
+  ;; To scroll page: C-b and C-f
+
+  ;; SPC l 2 creates "layout" number 2 if not already existent (set of windows with displayed buffers)
+  ;; Such layouts can be made and saved per project with SPC p l
+  ;; Did it but really dunno what it did...
   )
+
+
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
