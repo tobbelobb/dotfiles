@@ -2,6 +2,7 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
+;;; Code:
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
@@ -37,20 +38,25 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      helm
-     auto-completion
+     ;auto-completion
+     (auto-completion :variables
+                      auto-completion-enable-snippets-in-popup t ;; Expand yasnippets through popup.
+                      auto-completion-return-key-behavior nil)   ;; Do newlines with return, even if suggestion is active
      ;; better-defaults
      emacs-lisp
      ;; git
      ;; markdown
      org
      ;; evil-org-mode
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
+     (shell :variables
+            shell-default-height 30
+            shell-default-position 'bottom
+            shell-default-shell 'shell)
      ;; spell-checking
-     ;; syntax-checking
+     (syntax-checking :variables syntax-checking-enable-by-default nil)
      ;; version-control
      common-lisp
+     semantic ; gives automatic semantic refactor
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -296,6 +302,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
    ;; Evil
    evil-shift-round nil ; Behaviour of < and >. Nil means "insert/remove a constant number of spaces. Don't round."
+
    ))
 
 (defun dotspacemacs/user-config ()
@@ -314,12 +321,10 @@ you should place your code here."
       (setq inferior-lisp-program "/home/torbjorn/.roswell/impls/x86-64/linux/sbcl/1.3.9/bin/sbcl"))
 
   ;; Tell slime to load .sbclrc if sbcl is being used
-  (setf slime-lisp-implementations
-        `((sbcl ("ros" "-Q" "-l" "~/.sbclrc" "-L" "sbcl" "run"))))
+  (setf slime-lisp-implementations `((sbcl ("ros" "-Q" "-l" "~/.sbclrc" "-L" "sbcl" "run"))))
   (setf slime-default-lisp 'sbcl)
-  ;;; Tell slime to use utf-8 when communicating with the lisp process
+;;; Tell slime to use utf-8 when communicating with the lisp process
   (setq slime-net-coding-system 'utf-8-unix)
-
   ;; Map øø to escape insert mode in insert mode
   ;; TODO: Doesn't work for some reason. Using default "fd" instead
                                         ;(setq evil-escape-key-sequence (kbd "øø"))
@@ -329,37 +334,40 @@ you should place your code here."
   (define-key evil-normal-state-map "Ö" 'save-buffer)
   (define-key evil-normal-state-map "ø" 'save-buffer)
   (define-key evil-normal-state-map "ö" 'save-buffer)
-
   ;; Jump between windows with caps lock
   ;; Holding shift when pressing either cycles backwards instead of forwards
   (if (eq window-system 'x)
       (shell-command "xmodmap -e 'clear Lock' -e 'keycode 66 = F13'"))
-  (global-set-key [f13] 'next-multiframe-window)
-  (global-set-key (kbd "<S-f13>") 'previous-multiframe-window)
-
+  (global-set-key [f13]
+                  'next-multiframe-window)
+  (global-set-key (kbd "<S-f13>")
+                  'previous-multiframe-window)
   ;; Make backtab insert an actual tab character when in insert state
   (defun my-insert-tab ()
     (interactive)
     (insert "	"))
   (define-key evil-insert-state-map [backtab] 'my-insert-tab)
-
   ;; Make org mode not indent on tab...
-  ;(setq spacemacs-indent-sensitive-modes 'org) 
+                                        ;(setq spacemacs-indent-sensitive-modes 'org)
   ;; Above line doesn't place cursor on bullet on tab
   ;; Why doesn't tab org-cycle ??
   ;; Sometimes it does...
 
   ;; Strict mode refuses to delete parens sometimes
-  ;(turn-on-smartparens-strict-mode)
+                                        ;(turn-on-smartparens-strict-mode)
   ;; Use SPC tp to toggle smartparen
 
   ;; use vaws" as in visual all word surround double-tick to surround something in double-tick
+  ;; vaws) to surround in parens. using ( will surround with both space and paren...
+  ;; ds( deletes surrounding parens
+  ;; ds" deletes surrounding doublequotes etc
 
   ;; TODO: Would like unimpaired leader key to be duplicated.
   ;; [ and ] are simply too hard to remember and to get at
   ;; It would be easier to remember <left>, 8 and <up> instead of [
   ;; and <right>, 9 and <down> instead of ]
   ;; The following is copy-pasted from evil-unimpaired.el
+
   (define-key evil-normal-state-map (kbd "8 SPC") 'evil-unimpaired/insert-space-above)
   (define-key evil-normal-state-map (kbd "9 SPC") 'evil-unimpaired/insert-space-below)
   (define-key evil-normal-state-map (kbd "8 e") 'move-text-up)
@@ -401,7 +409,6 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "<right> w") 'next-multiframe-window)
   (define-key evil-normal-state-map (kbd "<left> p") 'evil-unimpaired/paste-above) ; paste above or below with newline
   (define-key evil-normal-state-map (kbd "<right> p") 'evil-unimpaired/paste-below)
-
   ;; Toggle centered cursor mini-mode with SPC t -
   ;; Use auto-completion and flycheck layer when I get home to the Internet
   ;; To scroll page: C-b and C-f
@@ -409,12 +416,72 @@ you should place your code here."
   ;; SPC l 2 creates "layout" number 2 if not already existent (set of windows with displayed buffers)
   ;; Such layouts can be made and saved per project with SPC p l
   ;; Did it but really dunno what it did...
+
+  ;; Cursor is pink in lisp-state and yellow in normal-state
+
+  ;; When in lisp-mode, Enter-button adds newline, indents and also indents complete sexp if there is one
+  (define-key lisp-mode-shared-map (kbd "RET") 'sp-newline)
+  ;; srefactor is a wonderful thing
+  ;; Bring sexp to one line:  SPC m = o
+  ;; Format a defun nicely:   SPC m = d
+  ;; Try make multiline sexp: SPC m = s
+  ;; I write "try" because there's per operator rules about how many operands there should be on the first line
+  ;; srefactor-lisp-format-sexp will also refuse to create a column of constants...
+
+  ;; Disable matching paren highlighting
+  ;; The closest pair of outer parens are always green anyways
+  (with-eval-after-load 'smartparens
+    (show-smartparens-global-mode -1))
+  ;; Press fr to jump to the next r
+  ;; Repeat with semicolon
+  ;; Step backwards again with K
+  (define-key evil-normal-state-map (kbd "K") 'evil-repeat-find-char-reverse)
+  ;; Press \ (backslash) to do stuff in emacs state...
+
+  ;; Delete word with C-w even when autocompletion is on
+  (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word)
+  ;; Scroll up and down with C-w and C-y
+  ;; This is built into Vim 
+
+  ;; Navigate up and down in Helm with C-j and C-k
+  ;; You can choose with C-l, tab or return
+  ;; C-z shows Helm keybindings
+  ;; C-SPC marks things in Helm
+  ;; When navigating folders in Helm: use C-l and C-h to go into and out of directories
+
+  ;; Open files:
+  ;; Any file:     SPC f f (only for files you open for the first time)
+  ;; Recent file:  SPC f r
+  ;; Project file: SPC p f
+  ;; Projects:     SPC p p
+
+  ;; Search in a file: SPC s s (helmswoop. The big thing.)
+
+  ;; SPC o is reserved for user shortcuts. Doesn't work...
+  ;(spacemacs/set-leader-keys "oi" 'imenu)
+  ;; SPC v (expand region) is extremely handy for lisp code...
+
+  ;; SPC s e is extremely useful for changing variable names...
+
+  ;; describe-key is found at
+  ;; SPC h d k
+  ;; C-h k (in insert mode)
+
+  ;; SPC h SPC gives what you need to know about spacemacs
+
+  ;; Autocompletion is scrolled with C-j and C-k, and selection done with C-l
+  ;; To get docstring of highlighted completion: C-d
+  ;; Some completions are actually snippets
+  ;; List all snippets with SPC i s
+  ;; Learn the most frequently useful ones?
+
+  ;; SPC t s to toggle syntax-checking
+  ;; SPC e l to get the errors all listed
+
+  ;; M-. and M-, work both in lisp-files and SLIME REPL
   )
 
-
-
-
-;; Do not write anything past this comment. This is where Emacs will
+;; do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -428,3 +495,4 @@ you should place your code here."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+;;; .spacemacs ends here
