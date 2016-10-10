@@ -313,7 +313,13 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   ;; Tell slime to run the Roswell controlled sbcl
-  (setq inferior-lisp-program "/home/torbjorn/.roswell/impls/x86-64/linux/sbcl/1.3.9/bin/sbcl")
+  ;; If sbcl 1.3.10 exists, use it, otherwise try to use 1.3.9
+  ;; This is weakly coded since it assumes that either ros sbcl 1.3.9 or 1.3.10 is installed
+  ;; Will fail soon...
+  (if (file-exists-p "/home/torbjorn/.roswell/impls/x86-64/linux/sbcl/1.3.10/bin/sbcl")
+      (setq inferior-lisp-program "/home/torbjorn/.roswell/impls/x86-64/linux/sbcl/1.3.10/bin/sbcl")
+      (setq inferior-lisp-program "/home/torbjorn/.roswell/impls/x86-64/linux/sbcl/1.3.9/bin/sbcl"))
+
   ;; Tell slime to load .sbclrc if sbcl is being used
   (setf slime-lisp-implementations `((sbcl ("ros" "-Q" "-l" "~/.sbclrc" "-L" "sbcl" "run"))))
   (setf slime-default-lisp 'sbcl)
