@@ -473,6 +473,36 @@ you should place your code here."
   ;; SPC e l to get the errors all listed
 
   ;; M-. and M-, work both in lisp-files and SLIME REPL
+
+  ;; Make slime selector available through F12 always
+  ;; TODO: This keybinding just disappeared while working??
+  (global-set-key (kbd "<f12>") 'slime-selector)
+  (define-key slime-fuzzy-completions-map (kbd "C-j") 'slime-fuzzy-next)
+  (define-key slime-fuzzy-completions-map (kbd "C-k") 'slime-fuzzy-prev)
+  (define-key slime-fuzzy-completions-map (kbd "C-l") 'slime-fuzzy-select-or-update-completions)
+
+  ;; Do vim movements in slime debugger
+  (define-key sldb-mode-map (kbd "j") 'next-line)
+  (define-key sldb-mode-map (kbd "k") 'previous-line)
+  (define-key sldb-mode-map (kbd "l") 'evil-forward-char)
+  (define-key sldb-mode-map (kbd "h") 'evil-backward-char)
+
+  ;; Really useful: with cursor on macro sexp, press
+  ;; C-c RET to slime-macroexpand-1
+  ;; You get an own macroexpansion buffer (which allows the vimmy hjkl keybindings)
+
+  ;; M-n and M-p runs the commands slime-next-note and slime-previous-note
+
+  ;; To navigate forward in inspector, type RET
+  ;; To navigate back again, type l
+  ;; To look at current keybindings: M-m ? or SPC ?
+  ;; To get back vimmy keybindings in sldb: C-z
+  ;; You're then back in Evil and lose sldb and inspector-specific key bindings
+
+  ;; Toggle tracing with C-c C-t
+
+  ;; List callers with C-c <.
+  ;; TODO: slime xref buffer doesn't behave well
   )
 
 ;; do not write anything past this comment. This is where Emacs will
