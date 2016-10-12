@@ -325,9 +325,6 @@ you should place your code here."
   (setf slime-default-lisp 'sbcl)
 ;;; Tell slime to use utf-8 when communicating with the lisp process
   (setq slime-net-coding-system 'utf-8-unix)
-  ;; Map øø to escape insert mode in insert mode
-  ;; TODO: Doesn't work for some reason. Using default "fd" instead
-                                        ;(setq evil-escape-key-sequence (kbd "øø"))
 
   ;; Save file from normal mode with Ø/Ö/ø/ö
   (define-key evil-normal-state-map "Ø" 'save-buffer)
@@ -441,7 +438,7 @@ you should place your code here."
   ;; Delete word with C-w even when autocompletion is on
   (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word)
   ;; Scroll up and down with C-w and C-y
-  ;; This is built into Vim 
+  ;; This is built into Vim
 
   ;; Navigate up and down in Helm with C-j and C-k
   ;; You can choose with C-l, tab or return
@@ -479,6 +476,8 @@ you should place your code here."
   ;; SPC e l to get the errors all listed
 
   ;; M-. and M-, work both in lisp-files and SLIME REPL
+  (if (file-exists-p "~/.local_emacs")
+    (load-file "~/.local_emacs"))
   )
 
 ;; do not write anything past this comment. This is where Emacs will
