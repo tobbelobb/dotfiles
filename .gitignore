@@ -8,3 +8,4 @@ vim/.vim/plugin_graveyard
 
 emacs/.emacs.d
 emacs/.emacs.d/*
+emacs/sbcl.core-with-swank
