@@ -55,7 +55,7 @@ values."
      ;; spell-checking
      (syntax-checking :variables syntax-checking-enable-by-default nil)
      ;; version-control
-     common-lisp
+     common-lisp ; needs some config to show slime-arglist for longer periods of time
      semantic ; gives automatic semantic refactor
      )
    ;; List of additional packages that will be installed without being
@@ -321,7 +321,9 @@ you should place your code here."
       (setq inferior-lisp-program "/home/torbjorn/.roswell/impls/x86-64/linux/sbcl/1.3.9/bin/sbcl"))
 
   ;; Tell slime to load .sbclrc if sbcl is being used
-  (setf slime-lisp-implementations `((sbcl ("ros" "-Q" "-l" "~/.sbclrc" "-L" "sbcl" "run"))))
+  ;; Also use 4 Gb heap because CLML needs it
+  ;; To check which space size you got: (sb-ext:dyamic-space-size)
+  (setf slime-lisp-implementations `((sbcl ("ros" "dynamic-space-size=4000" "-Q" "-l" "~/.sbclrc" "-L" "sbcl" "run"))))
   (setf slime-default-lisp 'sbcl)
 ;;; Tell slime to use utf-8 when communicating with the lisp process
   (setq slime-net-coding-system 'utf-8-unix)
@@ -359,12 +361,8 @@ you should place your code here."
   ;; ds( deletes surrounding parens
   ;; ds" deletes surrounding doublequotes etc
 
-  ;; TODO: Would like unimpaired leader key to be duplicated.
-  ;; [ and ] are simply too hard to remember and to get at
-  ;; It would be easier to remember <left>, 8 and <up> instead of [
-  ;; and <right>, 9 and <down> instead of ]
+  ;; Unimpaired leader keys duplicated to 8 and 9 because [ and ] are hard to reach on my keyboard
   ;; The following is copy-pasted from evil-unimpaired.el
-
   (define-key evil-normal-state-map (kbd "8 SPC") 'evil-unimpaired/insert-space-above)
   (define-key evil-normal-state-map (kbd "9 SPC") 'evil-unimpaired/insert-space-below)
   (define-key evil-normal-state-map (kbd "8 e") 'move-text-up)
@@ -385,27 +383,7 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "9 w") 'next-multiframe-window)
   (define-key evil-normal-state-map (kbd "8 p") 'evil-unimpaired/paste-above) ; paste above or below with newline
   (define-key evil-normal-state-map (kbd "9 p") 'evil-unimpaired/paste-below)
-  ;; If no <left> and <right> keys in helm gets irritating, just remove these
-  (define-key evil-normal-state-map (kbd "<left> SPC") 'evil-unimpaired/insert-space-above)
-  (define-key evil-normal-state-map (kbd "<right> SPC") 'evil-unimpaired/insert-space-below)
-  (define-key evil-normal-state-map (kbd "<left> e") 'move-text-up)
-  (define-key evil-normal-state-map (kbd "<right> e") 'move-text-down)
-  (define-key evil-visual-state-map (kbd "<left> e") ":move'<--1")
-  (define-key evil-visual-state-map (kbd "<right> e") ":move'>+1")
-  (define-key evil-normal-state-map (kbd "<left> b") 'previous-buffer)
-  (define-key evil-normal-state-map (kbd "<right> b") 'next-buffer)
-  (define-key evil-normal-state-map (kbd "<left> f") 'evil-unimpaired/previous-file)
-  (define-key evil-normal-state-map (kbd "<right> f") 'evil-unimpaired/next-file)
-  (define-key evil-normal-state-map (kbd "<right> l") 'spacemacs/next-error)
-  (define-key evil-normal-state-map (kbd "<left> l") 'spacemacs/previous-error)
-  (define-key evil-normal-state-map (kbd "<right> q") 'spacemacs/next-error)
-  (define-key evil-normal-state-map (kbd "<left> q") 'spacemacs/previous-error)
-  (define-key evil-normal-state-map (kbd "<left> t") 'evil-unimpaired/previous-frame)
-  (define-key evil-normal-state-map (kbd "<right> t") 'evil-unimpaired/next-frame)
-  (define-key evil-normal-state-map (kbd "<left> w") 'previous-multiframe-window)
-  (define-key evil-normal-state-map (kbd "<right> w") 'next-multiframe-window)
-  (define-key evil-normal-state-map (kbd "<left> p") 'evil-unimpaired/paste-above) ; paste above or below with newline
-  (define-key evil-normal-state-map (kbd "<right> p") 'evil-unimpaired/paste-below)
+
   ;; Toggle centered cursor mini-mode with SPC t -
   ;; Use auto-completion and flycheck layer when I get home to the Internet
   ;; To scroll page: C-b and C-f
@@ -422,6 +400,11 @@ you should place your code here."
   ;; Bring sexp to one line:  SPC m = o
   ;; Format a defun nicely:   SPC m = d
   ;; Try make multiline sexp: SPC m = s
+  ;; Wowowow... Somehow remapped to
+  ;; M-RET = o
+  ;; M-RET = d
+  ;; M-RET = s...
+  ;; Not available on the laptop!? srefactor is but keybindings are not
   ;; I write "try" because there's per operator rules about how many operands there should be on the first line
   ;; srefactor-lisp-format-sexp will also refuse to create a column of constants...
 
@@ -476,8 +459,48 @@ you should place your code here."
   ;; SPC e l to get the errors all listed
 
   ;; M-. and M-, work both in lisp-files and SLIME REPL
+
+  ;; Make slime selector available through F12 always
+  ;; TODO: This keybinding just disappeared while working??
+  ;; This doesn't always actually bind the key...
+  (global-set-key (kbd "<f12>") 'slime-selector)
+
+  (define-key slime-fuzzy-completions-map (kbd "C-j") 'slime-fuzzy-next)
+  (define-key slime-fuzzy-completions-map (kbd "C-k") 'slime-fuzzy-prev)
+  (define-key slime-fuzzy-completions-map (kbd "C-l") 'slime-fuzzy-select-or-update-completions)
+
+  ;; Do vim movements in slime debugger
+  (define-key sldb-mode-map (kbd "j") 'next-line)
+  (define-key sldb-mode-map (kbd "k") 'previous-line)
+  (define-key sldb-mode-map (kbd "l") 'evil-forward-char)
+  (define-key sldb-mode-map (kbd "h") 'evil-backward-char)
+
+  ;; Really useful: with cursor on macro sexp, press
+  ;; C-c RET to slime-macroexpand-1
+  ;; You get an own macroexpansion buffer (which allows the vimmy hjkl keybindings)
+
+  ;; M-n and M-p runs the commands slime-next-note and slime-previous-note
+
+  ;; To navigate forward in inspector, type RET
+  ;; To navigate back again, type l
+  ;; To look at current keybindings: M-m ? or SPC ?
+  ;; To get back vimmy keybindings in sldb: C-z
+  ;; You're then back in Evil and lose sldb and inspector-specific key bindings
+
+  ;; Toggle tracing with C-c C-t
+
+  ;; List callers with C-c <.
+  ;; TODO: slime xref buffer doesn't behave well
+
+  ;; hopefully disable semantic-idle-summary-mode
+  (add-hook 'lisp-mode '(lambda () (semantic-idle-summary-mode nil)))
+
   (if (file-exists-p "~/.local_emacs")
-    (load-file "~/.local_emacs"))
+      (load-file "~/.local_emacs"))
+
+  ;; What is ace jump word mode?
+
+  ;; I think it might be eldoc mode that clutters my slime-autodoc
   )
 
 ;; do not write anything past this comment. This is where Emacs will
@@ -494,4 +517,17 @@ you should place your code here."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;; TODO: This works but is not well coded.
+;; Would like only evil-normal-state-map
+;; Scroll page with C-j and C-k.
+;; I'll never use default C-j electric-newline-and-maybe-indent or C-k evil-insert-digraph (kill to end of line?)
+;;(defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
+;;(define-key my-keys-minor-mode-map (kbd "c-k") 'evil-scroll-page-up)
+;;(define-key my-keys-minor-mode-map (kbd "c-j") 'evil-scroll-page-down)
+;;(define-minor-mode my-keys-minor-mode
+;;  "A minor mode so that my key settings override annoying major modes."
+;;  t " my-keys" 'my-keys-minor-mode-map)
+;;(my-keys-minor-mode 1)
+
 ;;; .spacemacs ends here
