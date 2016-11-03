@@ -38,14 +38,14 @@ vnoremap <F1> <ESC>
 " color torte
 " color vividchalk
 color peachpuff
-nmap ø :
-vmap ø :
+nmap ø :w<Esc>
+vmap ø :w<Esc>
 "cmap ø <Esc>
 imap fd <Esc>
 imap øø <Esc>
 nmap Ø :w<Esc>
-nmap ö :
-vmap ö :
+nmap ö :w<Esc>
+vmap ö :w<Esc>
 imap öö <Esc>
 "cmap ö <Esc>
 nmap Ö :w<Esc>
@@ -61,6 +61,7 @@ inoremap ææ <right><Esc>
 nmap Æ :w<Esc>
 inoremap ø- <right><Return>
 inoremap ö- <right><Return>
+imap fd <Esc>
 set winaltkeys=no
 set clipboard=unnamedplus
 set notitle
