@@ -134,22 +134,30 @@ alias slut='sudo shutdown -h now'
 export LC_TIME=nb_NO.utf8
 # Mails sent to future self through tickle system and calendar
 alias idag='cal; calendar -f ~/GTD/calendar.personal; echo; echo "Filer:"; l ~/GTD/tickle/`date +%d` ~/GTD/tickle/`date +%B`;'
-# Remind me what to do today
+# Remind me about my calendar
 idag
 
-# Get quicker access to GTD
-alias In='vim /home/torbjorn/GTD/In'
-alias Göra='vim /home/torbjorn/GTD/Göra'
-alias Gøra='vim /home/torbjorn/GTD/Göra'
 
-# Roswell lisp organizer saves scripts here:
 
 # Check which folders take up the most space here
 alias dirsizes='du -sh ./* | sort -h'
-alias spacemacs='emacs'
+alias spacemacs='emacsclient -n -c'
+alias em='emacs'
+
+# Get quicker access to GTD
+alias In='spacemacs /home/torbjorn/GTD/In'
+alias Göra='spacemacs /home/torbjorn/GTD/Göra'
+alias Gøra='spacemacs /home/torbjorn/GTD/Göra'
 
 # These should go in .bash_profile, but that file is so hard to reload!
 PATH=$PATH:/home/torbjorn/scripts
 PATH=$PATH:/home/torbjorn/scripts/init-rapport:/home/torbjorn/scripts/init-physrap
 PATH=$PATH:/home/torbjorn/scripts/tor-browser_en-US
+# Roswell lisp organizer saves scripts here:
 export PATH=$PATH:$HOME/.roswell/bin
+
+# Needed to run Emacs as daemon, see
+# https://www.emacswiki.org/emacs/EmacsAsDaemon
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient -t"          # $EDITOR should open in terminal
+export VISUAL="emacsclient -c -a emacs" # $VISUAL opens in GUI with non-daemon as alternate
