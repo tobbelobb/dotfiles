@@ -32,6 +32,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -529,5 +530,8 @@ you should place your code here."
 ;;  "A minor mode so that my key settings override annoying major modes."
 ;;  t " my-keys" 'my-keys-minor-mode-map)
 ;;(my-keys-minor-mode 1)
+
+;; To make emacsclient launch by default, i put Spacemacsclient.desktop
+;; into /usr/share/applications/Spacemacsclient.desktop
 
 ;;; .spacemacs ends here
