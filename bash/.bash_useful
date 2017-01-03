@@ -24,6 +24,9 @@ avconv -i in.mp4 -vcodec libvpx -crf 10 -b:v 1M -acodec libvorbis -qscale:a 5 ou
 # Slicing movie file
 avconv -i in.mp4 -vcodec copy -acodec copy -ss 00:00:00 -t 00:01:40 out.mp4
 
+# Rotate mp4 90 deg counterclocwise by re-encoding
+avconv -i in.mp4 -vf "transpose=2" -codec:v libx264 -preset slow -crf 25 -codec:a copy out.mp4
+
 # Converting image size
 convert -resize 500 in.png out.png
 
@@ -32,3 +35,9 @@ git log --numstat --pretty="%H" produktrapport.tex > commitstats_produktrapport.
 
 # List all files #included in C code
 ack --cc '#include\s+<(.*)>' --output '$1' -h
+
+# Use the git alias graphviz (included myself in .gitconfig)
+git graphviz <arg> | dotty /dev/stdin
+
+# Make gif from pngs with delay for all frames
+convert $(for a in *; do printf -- "-delay 10 %s " $a; done; ) result.gif

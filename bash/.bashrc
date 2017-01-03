@@ -161,3 +161,6 @@ export PATH=$PATH:$HOME/.roswell/bin
 export ALTERNATE_EDITOR=""
 export EDITOR="emacsclient -t"          # $EDITOR should open in terminal
 export VISUAL="emacsclient -c -a emacs" # $VISUAL opens in GUI with non-daemon as alternate
+
+# Visualize git trees with git graphviz | dotty /dev/stdin
+alias gitgraph="git log --graph --oneline --decorate --date=relative --all"
