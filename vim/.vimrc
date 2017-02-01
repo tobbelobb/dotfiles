@@ -48,13 +48,13 @@ vmap ö :w<Esc>
 imap öö <Esc>
 "cmap ö <Esc>
 nmap Ö :w<Esc>
-nmap ä :
-vmap ä :
+nmap ä :w<Esc>
+vmap ä :w<Esc>
 "cmap ä <Esc>
 inoremap ää <right><Esc>
 nmap Ä :w<Esc>
-nmap æ :
-vmap æ :
+nmap æ :w<Esc>
+vmap æ :w<Esc>
 "cmap æ <Esc>
 inoremap ææ <right><Esc>
 nmap Æ :w<Esc>
