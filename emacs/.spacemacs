@@ -487,9 +487,11 @@ you should place your code here."
   ;; This doesn't always actually bind the key...
   (global-set-key (kbd "<f12>") 'slime-selector)
 
-  (define-key slime-fuzzy-completions-map (kbd "C-j") 'slime-fuzzy-next)
-  (define-key slime-fuzzy-completions-map (kbd "C-k") 'slime-fuzzy-prev)
-  (define-key slime-fuzzy-completions-map (kbd "C-l") 'slime-fuzzy-select-or-update-completions)
+  ;; *Messages* says:
+  ;;   (Spacemacs) Error in dotspacemacs/user-config: Symbol's value as variable is void: slime-fuzzy-completions-map
+  ;;(define-key slime-fuzzy-completions-map (kbd "C-j") 'slime-fuzzy-next)
+  ;;(define-key slime-fuzzy-completions-map (kbd "C-k") 'slime-fuzzy-prev)
+  ;;(define-key slime-fuzzy-completions-map (kbd "C-l") 'slime-fuzzy-select-or-update-completions)
 
   ;; Do vim movements in slime debugger
   (define-key sldb-mode-map (kbd "j") 'next-line)
