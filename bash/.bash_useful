@@ -32,3 +32,6 @@ git log --numstat --pretty="%H" produktrapport.tex > commitstats_produktrapport.
 
 # List all files #included in C code
 ack --cc '#include\s+<(.*)>' --output '$1' -h
+
+# Changing mouse modifier to super so that I can Blender with 2-button mouse
+gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
