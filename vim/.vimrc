@@ -41,6 +41,7 @@ color peachpuff
 nmap ø :w<Esc>
 vmap ø :w<Esc>
 "cmap ø <Esc>
+imap fd <Esc>
 imap øø <Esc>
 nmap Ø :w<Esc>
 nmap ö :w<Esc>

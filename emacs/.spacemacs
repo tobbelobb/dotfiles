@@ -304,6 +304,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
    ;; Evil
    evil-shift-round nil ; Behaviour of < and >. Nil means "insert/remove a constant number of spaces. Don't round."
 
+
    ))
 
 (defun dotspacemacs/user-config ()
@@ -326,8 +327,27 @@ you should place your code here."
   ;; To check which space size you got: (sb-ext:dyamic-space-size)
   (setf slime-lisp-implementations `((sbcl ("ros" "dynamic-space-size=4000" "-Q" "-l" "~/.sbclrc" "-L" "sbcl" "run"))))
   (setf slime-default-lisp 'sbcl)
-;;; Tell slime to use utf-8 when communicating with the lisp process
+  ; Tell slime to use utf-8 when communicating with the lisp process
   (setq slime-net-coding-system 'utf-8-unix)
+
+  ;; follow symlinks under version control
+  (setq vc-follow-symlinks t)
+
+  ;; Please insert newline below with Shift - j
+  (define-key evil-normal-state-map "J" 'spacemacs/evil-insert-line-below)
+;  (define-key evil-normal-state-map (kbd "S-j") 'spacemacs/evil-insert-line-below)
+  (define-key evil-normal-state-map "K" 'spacemacs/evil-insert-line-above)
+;  (define-key evil-normal-state-map (kbd "S-k") 'spacemacs/evil-insert-line-above)
+
+  ;; Scroll page with C-j and C-k.
+  ;; I'll never use default C-j electric-newline-and-maybe-indent or C-k evil-insert-digraph (kill to end of line?)
+  (define-key evil-normal-state-map (kbd "C-k") 'evil-scroll-page-up)
+  (define-key evil-normal-state-map (kbd "C-j") 'evil-scroll-page-down)
+
+  ; Forward slurp on Ctrl Shift s
+  (define-key evil-normal-state-map (kbd "C-S-s") 'evil-lisp-state-sp-forward-slurp-sexp)
+  ; Forward barf on Ctrl Shift s
+  (define-key evil-normal-state-map (kbd "C-S-b") 'evil-lisp-state-sp-forward-barf-sexp)
 
   ;; Save file from normal mode with Ø/Ö/ø/ö
   (define-key evil-normal-state-map "Ø" 'save-buffer)
@@ -416,7 +436,8 @@ you should place your code here."
   ;; Press fr to jump to the next r
   ;; Repeat with semicolon
   ;; Step backwards again with K
-  (define-key evil-normal-state-map (kbd "K") 'evil-repeat-find-char-reverse)
+  ;; OMG I'd rather insert newline above with K
+  ;(define-key evil-normal-state-map (kbd "K") 'evil-repeat-find-char-reverse)
   ;; Press \ (backslash) to do stuff in emacs state...
 
   ;; Delete word with C-w even when autocompletion is on
@@ -476,6 +497,7 @@ you should place your code here."
   (define-key sldb-mode-map (kbd "l") 'evil-forward-char)
   (define-key sldb-mode-map (kbd "h") 'evil-backward-char)
 
+
   ;; Really useful: with cursor on macro sexp, press
   ;; C-c RET to slime-macroexpand-1
   ;; You get an own macroexpansion buffer (which allows the vimmy hjkl keybindings)
@@ -519,19 +541,10 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  )
 
-;; TODO: This works but is not well coded.
-;; Would like only evil-normal-state-map
-;; Scroll page with C-j and C-k.
-;; I'll never use default C-j electric-newline-and-maybe-indent or C-k evil-insert-digraph (kill to end of line?)
-;;(defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
-;;(define-key my-keys-minor-mode-map (kbd "c-k") 'evil-scroll-page-up)
-;;(define-key my-keys-minor-mode-map (kbd "c-j") 'evil-scroll-page-down)
-;;(define-minor-mode my-keys-minor-mode
-;;  "A minor mode so that my key settings override annoying major modes."
-;;  t " my-keys" 'my-keys-minor-mode-map)
-;;(my-keys-minor-mode 1)
-
 ;; To make emacsclient launch by default, i put Spacemacsclient.desktop
 ;; into /usr/share/applications/Spacemacsclient.desktop
 
 ;;; .spacemacs ends here
+
+
+
