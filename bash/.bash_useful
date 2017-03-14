@@ -13,7 +13,7 @@ git remote add origin ssh://majaogtorbjornsbryllup.com@ssh.majaogtorbjornsbryllu
 git remote set-url origin ssh://majaogtorbjornsbryllup.com@ssh.majaogtorbjornsbryllup.com:~/repos/...
 
 # Checking installed packages and sizes
-dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n > sizes.txt
+aptitude -O installsize -F'%p %I' search '~i'
 
 # Create ogg audio from a mp4 file
 ffmpeg -i input.mp4 -vn -acodec libvorbis -y output.ogg
