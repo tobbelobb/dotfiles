@@ -119,7 +119,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
@@ -258,7 +258,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers t
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -304,7 +304,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
    ;; Evil
    evil-shift-round nil ; Behaviour of < and >. Nil means "insert/remove a constant number of spaces. Don't round."
 
+   ;; Enable double caps mode
+   ;; Is this the right place to do this?
+   ;double-caps-mode 1
 
+   ; I want to always see line numbers.
+   ;; Is this the right place to do this?
+   ;spacemacs/toggle-line-numbers-on
    ))
 
 (defun dotspacemacs/user-config ()
@@ -487,15 +493,23 @@ you should place your code here."
   ;; This doesn't always actually bind the key...
   (global-set-key (kbd "<f12>") 'slime-selector)
 
-  (define-key slime-fuzzy-completions-map (kbd "C-j") 'slime-fuzzy-next)
-  (define-key slime-fuzzy-completions-map (kbd "C-k") 'slime-fuzzy-prev)
-  (define-key slime-fuzzy-completions-map (kbd "C-l") 'slime-fuzzy-select-or-update-completions)
 
-  ;; Do vim movements in slime debugger
-  (define-key sldb-mode-map (kbd "j") 'next-line)
-  (define-key sldb-mode-map (kbd "k") 'previous-line)
-  (define-key sldb-mode-map (kbd "l") 'evil-forward-char)
-  (define-key sldb-mode-map (kbd "h") 'evil-backward-char)
+  ;; Do vim movements in slime
+  ;; https://www.common-lisp.net/project/slime/doc/html/Basic-customization.html#Basic-customization
+  (eval-after-load 'slime
+    `(define-key sldb-mode-map (kbd "j") 'next-line))
+  (eval-after-load 'slime
+    `(define-key sldb-mode-map (kbd "k") 'previous-line))
+  (eval-after-load 'slime
+    `(define-key sldb-mode-map (kbd "l") 'evil-forward-char))
+  (eval-after-load 'slime
+    `(define-key sldb-mode-map (kbd "h") 'evil-backward-char))
+  (eval-after-load 'slime
+    `(define-key slime-fuzzy-completions-map (kbd "C-j") 'slime-fuzzy-next))
+  (eval-after-load 'slime
+    `(define-key slime-fuzzy-completions-map (kbd "C-k") 'slime-fuzzy-prev))
+  (eval-after-load 'slime
+    `(define-key slime-fuzzy-completions-map (kbd "C-l") 'slime-fuzzy-select-or-update-completions))
 
 
   ;; Really useful: with cursor on macro sexp, press
@@ -515,15 +529,66 @@ you should place your code here."
   ;; List callers with C-c <.
   ;; TODO: slime xref buffer doesn't behave well
 
+  ;; middle click copy-paste
+  (setq x-select-enable-primary t)
+
+
+  ;; Syntax highlighting in SLIME REPL
+  (defvar slime-repl-font-lock-keywords lisp-font-lock-keywords-2)
+  (defun slime-repl-font-lock-setup ()
+    (setq font-lock-defaults
+          '(slime-repl-font-lock-keywords
+            ;; From lisp-mode.el
+            nil nil (("+-*/.<>=!?$%_&~^:@" . "w")) nil
+            (font-lock-syntactic-face-function
+             . lisp-font-lock-syntactic-face-function))))
+  (add-hook 'slime-repl-mode-hook 'slime-repl-font-lock-setup)
+  (defadvice slime-repl-insert-prompt (after font-lock-face activate)
+    (let ((inhibit-read-only t))
+      (add-text-properties
+       slime-repl-prompt-start-mark (point)
+       '(font-lock-face
+         slime-repl-prompt-face
+         rear-nonsticky
+         (slime-repl-prompt read-only font-lock-face intangible)))))
+
+
   ;; hopefully disable semantic-idle-summary-mode
-  (add-hook 'lisp-mode '(lambda () (semantic-idle-summary-mode nil)))
+  (add-hook 'lisp-mode '(lambda ()
+                          (semantic-idle-summary-mode nil)
+                          (show-paren-mode)
+                          ;; I think it might be eldoc mode that clutters my slime-autodoc
+                          (eldoc-mode nil)))
 
   (if (file-exists-p "~/.local_emacs")
       (load-file "~/.local_emacs"))
 
-  ;; What is ace jump word mode?
+  ;; Adding SLIME contribs
+  ;; Setup load-path, autoloads and your lisp system
+  ;;(add-to-list 'load-path "/home/torbjorn/.emacs.d/elpa/slime-20161004.816")
+  ;;(require 'slime-autoloads)
+  ;; Also setup the slime-fancy contrib
+  ;;(add-to-list 'slime-contribs 'slime-fancy)
 
-  ;; I think it might be eldoc mode that clutters my slime-autodoc
+  ;; Configure next-buffer skipping/nonskipping
+  (setq spacemacs-useful-buffers-regexp '("\\*\\(slime-repl \.\+\\|terminal\.\+\\|ansi-term\\|eshell\\)\\*"))
+  (defun skip-lisp-inferior (oldfun buffer)
+    "Advise spacemacs/useful-buffer-p to exclude *inferior-lisp* buffer even if its in comint mode"
+    (if (funcall oldfun buffer)
+        (not (with-current-buffer buffer
+               (derived-mode-p 'comint-mode)
+               (string-equal (buffer-name) "*inferior-lisp*")))))
+  (advice-add 'spacemacs/useful-buffer-p :around #'skip-lisp-inferior)
+
+  ;(push "\\*Messages\\*" spacemacs-useless-buffers-regexp)
+  ;(push "\\*Shell Command Output\\*" spacemacs-useless-buffers-regexp)
+  ;(push "\\*slime-events\\*" spacemacs-useless-buffers-regexp)
+  ;(push "\\*inferior-lisp\\*" spacemacs-useless-buffers-regexp)
+  ;(kill-buffer "*scratch*")
+
+  ;; Open REPL in sole window
+  (slime)
+  (spacemacs/toggle-maximize-buffer)
   )
 
 ;; do not write anything past this comment. This is where Emacs will
