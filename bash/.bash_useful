@@ -13,7 +13,7 @@ git remote add origin ssh://majaogtorbjornsbryllup.com@ssh.majaogtorbjornsbryllu
 git remote set-url origin ssh://majaogtorbjornsbryllup.com@ssh.majaogtorbjornsbryllup.com:~/repos/...
 
 # Checking installed packages and sizes
-dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n > sizes.txt
+aptitude -O installsize -F'%p %I' search '~i'
 
 # Create ogg audio from a mp4 file
 ffmpeg -i input.mp4 -vn -acodec libvorbis -y output.ogg
@@ -35,6 +35,9 @@ git log --numstat --pretty="%H" produktrapport.tex > commitstats_produktrapport.
 
 # List all files #included in C code
 ack --cc '#include\s+<(.*)>' --output '$1' -h
+
+# Changing mouse modifier to super so that I can Blender with 2-button mouse
+gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
 
 # Use the git alias graphviz (included myself in .gitconfig)
 git graphviz <arg> | dotty /dev/stdin

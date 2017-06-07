@@ -493,6 +493,11 @@ you should place your code here."
   ;; This doesn't always actually bind the key...
   (global-set-key (kbd "<f12>") 'slime-selector)
 
+  ;; *Messages* says:
+  ;;   (Spacemacs) Error in dotspacemacs/user-config: Symbol's value as variable is void: slime-fuzzy-completions-map
+  ;;(define-key slime-fuzzy-completions-map (kbd "C-j") 'slime-fuzzy-next)
+  ;;(define-key slime-fuzzy-completions-map (kbd "C-k") 'slime-fuzzy-prev)
+  ;;(define-key slime-fuzzy-completions-map (kbd "C-l") 'slime-fuzzy-select-or-update-completions)
 
   ;; Do vim movements in slime
   ;; https://www.common-lisp.net/project/slime/doc/html/Basic-customization.html#Basic-customization
