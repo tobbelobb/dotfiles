@@ -350,6 +350,11 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "C-k") 'evil-scroll-page-up)
   (define-key evil-normal-state-map (kbd "C-j") 'evil-scroll-page-down)
 
+  ;; Increase number with C-a
+  (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
+  (define-key evil-normal-state-map (kbd "C-z") 'evil-numbers/dec-at-pt)
+  (define-key evil-normal-state-map (kbd "C-<") 'evil-emacs-state)
+
   ; Forward slurp on Ctrl Shift s
   (define-key evil-normal-state-map (kbd "C-S-s") 'evil-lisp-state-sp-forward-slurp-sexp)
   ; Forward barf on Ctrl Shift s
