@@ -44,3 +44,24 @@ git graphviz <arg> | dotty /dev/stdin
 
 # Make gif from pngs with delay for all frames
 convert $(for a in *; do printf -- "-delay 10 %s " $a; done; ) result.gif
+
+# Concatenate some pdfs
+pdftk l1.pdf l1p5.pdf l2.pdf l3.pdf l4.pdf l4p5.pdf l5.pdf cat output layout.pdf
+
+gs -o output.pdf -sDEVICE=pdfwrite \
+                 -dAntiAliasColorImage=false \
+                 -dAntiAliasGrayImage=false \
+                 -dAntiAliasMonoImage=false \
+                 -dAutoFilterColorImages=false \
+                 -dAutoFilterGrayImages=false \
+                 -dDownsampleColorImages=false  \
+                 -dDownsampleGrayImages=false \
+                 -dDownsampleMonoImages=false \
+                 -dColorConversionStrategy=/LeaveColorUnchanged \
+                 -dConvertCMYKImagesToRGB=false \
+                 -dConvertImagesToIndexed=false \
+                 -dUCRandBGInfo=/Preserve \
+                 -dPreserveHalftoneInfo=true \
+                 -dPreserveOPIComments=true \
+                 -dPreserveOverprintSettings=true \
+                 l1.pdf l2.pdf l3.pdf l4.pdf l5.pdf l6.pdf

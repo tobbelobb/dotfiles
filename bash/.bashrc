@@ -164,3 +164,4 @@ export VISUAL="emacsclient -c -a emacs" # $VISUAL opens in GUI with non-daemon a
 
 # Visualize git trees with git graphviz | dotty /dev/stdin
 alias gitgraph="git log --graph --oneline --decorate --date=relative --all"
+alias gl="git branch; git log --oneline | head"
