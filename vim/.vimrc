@@ -14,11 +14,33 @@ set confirm
 
 set scrolloff=1
 set incsearch
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
-set expandtab
+" ODrive Firmware tab settings
+"set tabstop=4
+"set shiftwidth=4
+"set softtabstop=4
+"set expandtab
+"set smarttab
+
+" RepRapFirmware tab settings
 set smarttab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=0
+set noexpandtab
+
+
+" Normal tab settings
+"set tabstop=2
+"set shiftwidth=2
+"set softtabstop=2
+"set expandtab
+"set smarttab
+
+" Just want to find the tags files.
+" The .git dirs in parent dirs were supposed to be searched by default
+" But they weren't
+set tags=./tags,../.git/tags,../../.git/tags,../../../.git/tags
+
 set autoindent
 set nu
 set undofile
@@ -31,7 +53,7 @@ set textwidth=170
 set formatoptions=qrn1
 "set colorcolumn=85
 set laststatus=2 " Always show the statusline
-set autochdir
+"set autochdir
 inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
@@ -106,15 +128,15 @@ endif
 " strings right...
 " syntax sync minlines=500
 " Try even harder to get highlightning right...
-autocmd BufEnter * :syntax sync fromstart
+"autocmd BufEnter * :syntax sync fromstart
 " Autoreload this file on save...
 augroup reload_vimrc " {
     autocmd!
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
 augroup END " }
 " Save folds and restore when file is re-opened
-au BufWinLeave * mkview
-au BufWinEnter * silent loadview
+"au BufWinLeave * mkview
+"au BufWinEnter * silent loadview
 " Base html-indenting on <p> as well...
 let g:html_indent_inctags = "p"
 " Don't indent on &! Never!
@@ -204,6 +226,8 @@ inoremap <S-Tab> <C-V><Tab>
 
 " Often type spit when I mean split. This autocorrects for me
 cnoreabbrev spit split
+" Also gerp
+cnoreabbrev gerp grep
 
 " For hyphened lists
 " - like
@@ -242,3 +266,73 @@ function! s:CombineSelection(line1, line2, cp)
   execute 'let char = "\u'.a:cp.'"'
   execute a:line1.','.a:line2.'s/\%V[^[:cntrl:]]/&'.char.'/ge'
 endfunction
+
+" Search for word under cursor
+map <F4> :execute "noautocmd vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
+
+" Gives lvim a default lvim search word under cursor
+cabbrev lvim
+      \ noautocmd lvim /\<lt><C-R><C-W>\>/gj
+      \ **/*<C-R>=(expand("%:e")=="" ? "" : ".".expand("%:e"))<CR>
+      \ <Bar> lw
+      \ <C-Left><C-Left><C-Left>
+
+" Same, but includes C-relevant files only in the search
+cabbrev cgw
+      \ noautocmd lvim /\<lt><C-R><C-W>\>/gj
+      \ **/*.h **/*.c **/*.cpp
+      \ <Bar> lw
+      \ <C-Left><C-Left><C-Left><C-Left><C-Left><C-Left>
+
+" Use last search pattern instead of word under cursor
+" Avoids error when on empty line and stuff
+cabbrev cgr
+      \ noautocmd lvim /\<lt><C-R>/\>/gj
+      \ **/*.h **/*.c **/*.cpp
+      \ <Bar> lw
+      \ <C-Left><C-Left><C-Left><C-Left><C-Left><C-Left>
+
+" Make use of the jumps list
+function! GotoJump()
+  jumps
+  let j = input("Please select your jump: ")
+  if j != ''
+    let pattern = '\v\c^\+'
+    if j =~ pattern
+      let j = substitute(j, pattern, '', 'g')
+      execute "normal " . j . "\<c-i>"
+    else
+      execute "normal " . j . "\<c-o>"
+    endif
+  endif
+endfunction
+
+nmap <C-h> :call GotoJump()<CR>
+
+if has("cscope")
+    set csprg=/usr/bin/cscope
+    set csto=0
+    set cst
+    set nocsverb
+    " add any database in current directory
+    if filereadable("cscope.out")
+        cs add cscope.out
+        " else add database pointed to by environment
+    elseif $CSCOPE_DB != ""
+        cs add $CSCOPE_DB
+    endif
+endif
+
+" cscope_maps.vim plugin has the following remaps that don't work
+"nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+"nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+"nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+"nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+"nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+"nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+"nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+"nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+" I really care only about the c one for now
+
+nmap <C-l> :cs find c <C-R>=expand("<cword>")<CR><CR>
+
