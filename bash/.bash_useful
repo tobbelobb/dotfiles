@@ -65,3 +65,6 @@ gs -o output.pdf -sDEVICE=pdfwrite \
                  -dPreserveOPIComments=true \
                  -dPreserveOverprintSettings=true \
                  l1.pdf l2.pdf l3.pdf l4.pdf l5.pdf l6.pdf
+
+# Making git read hook scripts from templatedir
+git config --global init.templatedir '~/.git_template'
