@@ -68,3 +68,38 @@ gs -o output.pdf -sDEVICE=pdfwrite \
 
 # Making git read hook scripts from templatedir
 git config --global init.templatedir '~/.git_template'
+
+# View file history
+git log --follow -p -- <filename>
+
+# Update git submodules to the new state that current branch points to
+git submodule update --init
+
+# Start a gdb session
+gdb --args path/to/binary --gtest_break_on_failure --gtest_filter=theclass.thetest
+
+# Clean up submodule build stuff if make clean has been unsuccessful after last build
+git submodule foreach git clean -dxf
+
+# What have we fetched that would get included if we rebase?
+git hist ..origin/master
+
+# Print the full path of a file (like thefile in this example)
+readlink -f thefile
+
+# Clean up working directory very temporarily
+git stash
+git stash list
+git stash pop
+
+# Lets you add one hunch at a time, reviewing yourself before adding
+git gui
+
+# Starts kdiff3 in my case. Better mergetools may exist...
+git mergetool
+
+# Apply clang-format to every change in the previous commit
+git clang-format HEAD^
+
+# When you get unexpected merge conflicts that you don't want to resolve
+git checkout -f
