@@ -1,9 +1,11 @@
 [user]
-	name = tobbelobb
-	email = tobben@fastmail.fm
+	name = tobben
+	email = tobben@hangprinter.org
 [init]
 	templatedir = ~/.git_template
 [alias]
-	hist = log --graph --decorate --abbrev=5 --date=short --format=format:'%C(bold blue)%h%C(reset)-%C(bold green)%ad%C(reset) %C(white)%<(80,trunc)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
-	histl = log --graph --decorate --abbrev=5 --date=short --format=format:'%C(bold blue)%h%C(reset)-%C(bold green)%ad%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
+	hist = log --graph --decorate --abbrev=5 --date=short --format=format:'%C(bold blue)%h%C(reset) %C(bold green)%ad%C(reset) %C(yellow)%<(80,trunc)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
+	histl = log --graph --decorate --abbrev=5 --date=short --format=format:'%C(bold blue)%h%C(reset) %C(bold green)%ad%C(reset) %C(yellow)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
 	gerp = git-gerp
+    oldfile = log --all --full-history --
+    st = status

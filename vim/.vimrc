@@ -15,18 +15,18 @@ set confirm
 set scrolloff=1
 set incsearch
 " ODrive Firmware tab settings
-"set tabstop=4
-"set shiftwidth=4
-"set softtabstop=4
-"set expandtab
-"set smarttab
-
-" RepRapFirmware tab settings
-set smarttab
 set tabstop=4
 set shiftwidth=4
-set softtabstop=0
-set noexpandtab
+set softtabstop=4
+set expandtab
+set smarttab
+
+" RepRapFirmware tab settings
+" set smarttab
+" set tabstop=4
+" set shiftwidth=4
+" set softtabstop=0
+" set noexpandtab
 
 
 " Normal tab settings
@@ -85,7 +85,7 @@ inoremap ø- <right><Return>
 inoremap ö- <right><Return>
 imap fd <Esc>
 set winaltkeys=no
-set clipboard=unnamedplus
+set clipboard=unnamed,unnamedplus
 set notitle
 " λ lambda
 inoremap <C-l> <C-v>u3bb<Space>
@@ -142,8 +142,8 @@ let g:html_indent_inctags = "p"
 " Don't indent on &! Never!
 setlocal indentkeys-=\&
 " Tab to next window. Ctrl-w means quit in Chrome
-nnoremap <tab> <c-w>w
-nnoremap <S-tab> <c-w>W
+nnoremap <S-tab> <c-w>w
+"nnoremap <S-tab> <c-w>W
 
 """"""""""""""" MESSING AROUND WITH DIRECTORIES """"""""""""""""""
 " Save your backups to a less annoying place than the current directory.
@@ -309,19 +309,27 @@ endfunction
 
 nmap <C-h> :call GotoJump()<CR>
 
-if has("cscope")
-    set csprg=/usr/bin/cscope
-    set csto=0
-    set cst
-    set nocsverb
-    " add any database in current directory
-    if filereadable("cscope.out")
-        cs add cscope.out
-        " else add database pointed to by environment
-    elseif $CSCOPE_DB != ""
-        cs add $CSCOPE_DB
-    endif
-endif
+"if has("cscope")
+"    set csprg=/usr/bin/cscope
+"    set csto=0
+"    set cst
+"    set nocsverb
+"    " add any database in current directory
+"    if filereadable("cscope.out")
+"        cs add cscope.out
+"        " else add database pointed to by environment
+"    elseif $CSCOPE_DB != ""
+"        cs add $CSCOPE_DB
+"    endif
+"endif
+
+
+set cscoperelative
+set nocscopeverbose
+cs add ~/eclipse-workspace/RepRapFirmware/src/cscope.out
+"cs add ~/eclipse-workspace/CoreNG/variants/duetNG/cscope.out
+cs add ~/eclipse-workspace/CoreNG/cscope.out
+set cscopeverbose
 
 " cscope_maps.vim plugin has the following remaps that don't work
 "nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
@@ -336,3 +344,11 @@ endif
 
 nmap <C-l> :cs find c <C-R>=expand("<cword>")<CR><CR>
 
+
+set path+=**
+set wildmenu
+set wildmode=longest:full
+
+autocmd VimLeave * call system("xsel -ib", getreg('+'))
+
+execute pathogen#infect()
