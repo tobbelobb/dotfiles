@@ -12,3 +12,4 @@ autocmd BufNewFile,BufRead *.plt setfiletype GNUplot
 au BufRead,BufNewFile *.ino,*.pde set filetype=arduino
 autocmd BufNewFile,BufRead calendar.* setfiletype calendar
 autocmd BufNewFile,BufRead *.ros setfiletype lisp
+autocmd BufNewFile,BufRead *.h++ setfiletype cpp

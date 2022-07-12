@@ -22,14 +22,14 @@ set expandtab
 set smarttab
 
 " RepRapFirmware tab settings
-" set smarttab
-" set tabstop=4
-" set shiftwidth=4
-" set softtabstop=0
-" set noexpandtab
+"set smarttab
+"set tabstop=4
+"set shiftwidth=4
+"set softtabstop=0
+"set noexpandtab
 
 
-" Normal tab settings
+"" Normal tab settings
 "set tabstop=2
 "set shiftwidth=2
 "set softtabstop=2
@@ -41,13 +41,15 @@ set smarttab
 " But they weren't
 set tags=./tags,../.git/tags,../../.git/tags,../../../.git/tags
 
+
 set autoindent
 set nu
 set undofile
 set ignorecase
 set smartcase
 set gdefault
-syntax on
+"syntax on
+syntax enable
 set wrap
 set textwidth=170
 set formatoptions=qrn1
@@ -57,13 +59,29 @@ set laststatus=2 " Always show the statusline
 inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
+
+" Format Rust code upon save
+let g:rustfmt_autosave = 1
+function! Formatonsave()
+  let l:formatdiff = 1
+  py3file ~/.vim/clang-format.py
+endfunction
+" Format C++ code upon save
+"autocmd BufWritePre *.h,*.cc,*.cpp,*.hxx,*.cxx,*.c++,*.h++ call Formatonsave()
+
+
+set nrformats=""
 " color torte
 " color vividchalk
-color peachpuff
+" color peachpuff
+color morning
+"color delek
 nmap ø :w<Esc>
 vmap ø :w<Esc>
 "cmap ø <Esc>
 imap fd <Esc>
+imap Fd <Esc>
+imap đd <Esc>
 imap øø <Esc>
 nmap Ø :w<Esc>
 nmap ö :w<Esc>
@@ -71,18 +89,21 @@ vmap ö :w<Esc>
 imap öö <Esc>
 "cmap ö <Esc>
 nmap Ö :w<Esc>
-nmap ä :w<Esc>
-vmap ä :w<Esc>
+"map ä :py3file ~/.vim/clang-format.py<cr>
+map ä :RustFmt<cr>
+"imap ä :w<Esc>
 "cmap ä <Esc>
 inoremap ää <right><Esc>
 nmap Ä :w<Esc>
-nmap æ :w<Esc>
-vmap æ :w<Esc>
+"map æ :py3file ~/.vim/clang-format.py<cr>
+map æ :RustFmt<cr>
+"nmap æ :w<Esc>
+"vmap æ :w<Esc>
 "cmap æ <Esc>
-inoremap ææ <right><Esc>
+"inoremap ææ <right><Esc>
 nmap Æ :w<Esc>
-inoremap ø- <right><Return>
-inoremap ö- <right><Return>
+"inoremap ø- <right><Return>
+"inoremap ö- <right><Return>
 imap fd <Esc>
 set winaltkeys=no
 set clipboard=unnamed,unnamedplus
@@ -206,9 +227,6 @@ endif
 " Don't try do indent my columns
 "let g:tex_indent_and = 0
 
-" For quick Python compilation. I actually never use Python...
-" map <F2> :w\|!python % <Return>
-
 " Increase numbers by 0, 1, 2, ...
 function! Incr()
   let a = line('.') - line("'<")
@@ -226,8 +244,11 @@ inoremap <S-Tab> <C-V><Tab>
 
 " Often type spit when I mean split. This autocorrects for me
 cnoreabbrev spit split
+cnoreabbrev spilt split
+cnoreabbrev vspilt vsplit
+cnoreabbrev hspilt hsplit
 " Also gerp
-cnoreabbrev gerp grep
+" cnoreabbrev gerp grep
 
 " For hyphened lists
 " - like
@@ -252,8 +273,8 @@ autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 
 " Use colors to signify if we're in insert mode or nor
 au InsertEnter * hi StatusLine ctermfg=Red
-au InsertLeave * hi StatusLine ctermfg=Green
-hi StatusLine ctermfg=Green
+au InsertLeave * hi StatusLine ctermfg=Blue
+hi StatusLine ctermfg=Blue
 
 " Underline and overline characters
 " modify selected text using combining diacritics
@@ -268,7 +289,7 @@ function! s:CombineSelection(line1, line2, cp)
 endfunction
 
 " Search for word under cursor
-map <F4> :execute "noautocmd vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
+"nnoremap <F4> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 
 " Gives lvim a default lvim search word under cursor
 cabbrev lvim
@@ -309,28 +330,12 @@ endfunction
 
 nmap <C-h> :call GotoJump()<CR>
 
-"if has("cscope")
-"    set csprg=/usr/bin/cscope
-"    set csto=0
-"    set cst
-"    set nocsverb
-"    " add any database in current directory
-"    if filereadable("cscope.out")
-"        cs add cscope.out
-"        " else add database pointed to by environment
-"    elseif $CSCOPE_DB != ""
-"        cs add $CSCOPE_DB
-"    endif
-"endif
-
-
 set cscoperelative
 set nocscopeverbose
-cs add ~/eclipse-workspace/RepRapFirmware/src/cscope.out
+"cs add ~/eclipse-workspace/RepRapFirmware/src/cscope.out
 "cs add ~/eclipse-workspace/CoreNG/variants/duetNG/cscope.out
-cs add ~/eclipse-workspace/CoreNG/cscope.out
+"cs add ~/eclipse-workspace/CoreNG/cscope.out
 set cscopeverbose
-
 " cscope_maps.vim plugin has the following remaps that don't work
 "nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
 "nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
@@ -344,11 +349,64 @@ set cscopeverbose
 
 nmap <C-l> :cs find c <C-R>=expand("<cword>")<CR><CR>
 
+" Jump between c++ and h++ files with F4
+map <F4> :e %:p:s,.h++$,.X123X,:s,.c++$,.h++,:s,.X123X$,.c++,<CR>
+" Jump between cpp and h files with F4
+" map <F4> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
+
 
 set path+=**
 set wildmenu
 set wildmode=longest:full
 
+let mapleader = " "
+
 autocmd VimLeave * call system("xsel -ib", getreg('+'))
 
-execute pathogen#infect()
+if empty(glob("~/.vim/autoload/plug.vim"))
+    execute '!curl -fLo ~/.vim/autoload/plug.vim https://raw.github.com/junegunn/vim-plug/master/plug.vim'
+endif
+
+call plug#begin('~/.vim/bundle')
+"" Use <leader> then s to search for files
+let g:ctrlp_map = '<leader>s'
+
+Plug 'tpope/vim-fugitive'
+Plug 'mckellyln/vim-rtags'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'rust-lang/rust.vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+au FocusLost * :wa
+
+call plug#end()
+
+" Tab completion with rust coc
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ CheckBackspace() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Jumping around with rust coc
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
