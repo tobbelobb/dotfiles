@@ -107,10 +107,10 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 if [ "$color_prompt" = yes ]; then
-PS1="${debian_chroot:+($debian_chroot)}\e[1;31m\u[\w]\\$\e[m "
+PS1="${debian_chroot:+($debian_chroot)}\e[1;31m\u@arve[\w]\\$\e[m "
 else
   #changed the PS1 below on 6/14/08 for a color prompt
-  PS1='${debian_chroot:+($debian_chroot)}\[\e[1;32m\]\u[\w]\\$\[\e[m\] '
+  PS1='${debian_chroot:+($debian_chroot)}\[\e[1;32m\]\u@arve[\w]\\$\[\e[m\] '
 fi
 
 export OPENSCADPATH="/home/torbjorn/Desktop/VanityRepRap/Hangprinter/Thingiverse-Projects/ThreadedLibrary/"
@@ -133,7 +133,7 @@ alias slut='sudo shutdown -h now'
 # Needed because of Norwegian names in GTD tickle directories
 export LC_TIME=nb_NO.utf8
 # Mails sent to future self through tickle system and calendar
-alias idag='cal; calendar -f ~/GTD/calendar.personal; echo; echo "Filer:"; l ~/GTD/tickle/`date +%d` ~/GTD/tickle/`date +%B`;'
+alias idag='cal; calendar -f ~/GTD/calendar.personal; echo;'
 # Remind me about my calendar
 idag
 
@@ -141,13 +141,13 @@ idag
 
 # Check which folders take up the most space here
 alias dirsizes='du -sh ./* | sort -h'
-alias spacemacs='emacsclient -n -c'
+#alias spacemacs='emacsclient -n -c'
 alias em='emacs'
 
 # Get quicker access to GTD
-alias In='spacemacs /home/torbjorn/GTD/In'
-alias Göra='spacemacs /home/torbjorn/GTD/Göra'
-alias Gøra='spacemacs /home/torbjorn/GTD/Göra'
+alias In='vim /home/torbjorn/GTD/In'
+alias Göra='vim /home/torbjorn/GTD/Göra'
+alias Gøra='vim /home/torbjorn/GTD/Göra'
 
 # These should go in .bash_profile, but that file is so hard to reload!
 PATH=$PATH:/home/torbjorn/scripts
@@ -155,13 +155,38 @@ PATH=$PATH:/home/torbjorn/scripts/init-rapport:/home/torbjorn/scripts/init-physr
 PATH=$PATH:/home/torbjorn/scripts/tor-browser_en-US
 # Roswell lisp organizer saves scripts here:
 export PATH=$PATH:$HOME/.roswell/bin
+export PATH=$PATH:~/bin
+export PATH=$PATH:/home/torbjorn/GithubRepos/rtags/bin
 
 # Needed to run Emacs as daemon, see
 # https://www.emacswiki.org/emacs/EmacsAsDaemon
 export ALTERNATE_EDITOR=""
-export EDITOR="emacsclient -t"          # $EDITOR should open in terminal
-export VISUAL="emacsclient -c -a emacs" # $VISUAL opens in GUI with non-daemon as alternate
+export EDITOR="vim"          # $EDITOR should open in terminal
+export VISUAL="gvim" # $VISUAL opens in GUI with non-daemon as alternate
 
 # Visualize git trees with git graphviz | dotty /dev/stdin
 alias gitgraph="git log --graph --oneline --decorate --date=relative --all"
 alias gl="git branch; git log --oneline | head"
+alias ccc="./compile.sh"
+alias ttt="./test.sh"
+
+# Get adb and fastboot from the Downloads directory
+#PATH=$PATH:/home/torbjorn/Downloads/platform-tools_r28.0.1-linux/platform-tools
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
+alias cdl="cd /home/torbjorn/GitlabRepos/line-collision-detector/"
+alias cdll="cd /home/torbjorn/GitlabRepos/line-collision-detector/linc/"
+alias cdlll="cd /home/torbjorn/GitlabRepos/line-collision-detector/linc/linc/"
+alias cdh="cd /home/torbjorn/GitlabRepos/hp-mark/"
+alias cdhh="cd /home/torbjorn/GitlabRepos/hp-mark/hpm/"
+alias cdhhh="cd /home/torbjorn/GitlabRepos/hp-mark/hpm/hpm/"
+alias cdhp="cd /home/torbjorn/GitlabRepos/hangprinter/src/"
+alias d="cd hpm/"
+alias u="cd .."
+alias v="vim"
+alias f="find . -name"
+# Virtual Environment Wrapper
+alias workoncv-4.4="source ~/opt/OpenCV-4.4-py3/bin/activate"
+. "$HOME/.cargo/env"

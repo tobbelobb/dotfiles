@@ -42,8 +42,13 @@ gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
 # Use the git alias graphviz (included myself in .gitconfig)
 git graphviz <arg> | dotty /dev/stdin
 
-# Make gif from pngs with delay for all frames
-convert $(for a in *; do printf -- "-delay 10 %s " $a; done; ) result.gif
+
+# Once you have the frames, create a pallette:
+ffmpeg -i frames/frame%05d.png -vf palettegen frames/palette.png
+# Once you have frames and pallete, create gif:
+ffmpeg -v warning -framerate 200 -i frames/frame%05d.png -i frames/palette.png -lavfi "paletteuse,setpts=6*PTS" -y out.gif
+# If you want to resize the gif, try this:
+ffmpeg -hide_banner -v warning -i demo.gif -filter_complex "[0:v] scale=320:-1:flags=lanczos,split [a][b]; [a] palettegen=reserve_transparent=on [p]; [b][p] paletteuse" demo_small.gif
 
 # Concatenate some pdfs
 pdftk l1.pdf l1p5.pdf l2.pdf l3.pdf l4.pdf l4p5.pdf l5.pdf cat output layout.pdf
@@ -103,3 +108,17 @@ git clang-format HEAD^
 
 # When you get unexpected merge conflicts that you don't want to resolve
 git checkout -f
+#
+# Batch convert resize
+for a in ./*.jpg; do convert -resize 500 $a liten_$(basename $a); done;
+
+# Concatenate two webms
+ffmpeg -y -f concat -i mylist.txt -safe 0 -sn -acodec copy -vcodec copy out.webm
+
+# Creating a linc core dump on Ubuntu host (not in Docker)
+sudo sysctl -w kernel.core_pattern=core.%u.%p.%t
+ulimit -c unlimited
+cd ~/GitlabRepos/line-collision-detector/linc-gcc/linc/linc
+./linc ../../../linc/linc/test-models/benchy-low-poly.binary.stl ../../../linc/linc/params-example
+systemctl restart apport # to restore default apport settings afterwards
+
