@@ -15,11 +15,11 @@ set confirm
 set scrolloff=1
 set incsearch
 " ODrive Firmware tab settings
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-set expandtab
-set smarttab
+"set tabstop=4
+"set shiftwidth=4
+"set softtabstop=4
+"set expandtab
+"set smarttab
 
 " RepRapFirmware tab settings
 "set smarttab
@@ -30,11 +30,11 @@ set smarttab
 
 
 "" Normal tab settings
-"set tabstop=2
-"set shiftwidth=2
-"set softtabstop=2
-"set expandtab
-"set smarttab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+set smarttab
 
 " Just want to find the tags files.
 " The .git dirs in parent dirs were supposed to be searched by default
@@ -69,13 +69,7 @@ endfunction
 " Format C++ code upon save
 "autocmd BufWritePre *.h,*.cc,*.cpp,*.hxx,*.cxx,*.c++,*.h++ call Formatonsave()
 
-
 set nrformats=""
-" color torte
-" color vividchalk
-" color peachpuff
-color morning
-"color delek
 nmap ø :w<Esc>
 vmap ø :w<Esc>
 "cmap ø <Esc>
@@ -105,6 +99,12 @@ nmap Æ :w<Esc>
 "inoremap ø- <right><Return>
 "inoremap ö- <right><Return>
 imap fd <Esc>
+
+" Experimental. Alleviate finger strain from typing braces
+imap fB {<cr>}<up><end><cr>
+imap fb {}
+imap ¨ #[()]
+
 set winaltkeys=no
 set clipboard=unnamed,unnamedplus
 set notitle
@@ -119,8 +119,9 @@ nnoremap <S-j> m`o<esc>``
 " page up, page down...
 nnoremap <C-k> <C-b>
 nnoremap <C-j> <C-f>
-" Vsplit ordnung
+" split ordnung
 set splitright
+set splitbelow
 "Spellchecking
 "set spell
 "setlocal spelllang=en
@@ -163,7 +164,7 @@ let g:html_indent_inctags = "p"
 " Don't indent on &! Never!
 setlocal indentkeys-=\&
 " Tab to next window. Ctrl-w means quit in Chrome
-nnoremap <S-tab> <c-w>w
+"nnoremap <S-tab> <c-w>w
 "nnoremap <S-tab> <c-w>W
 
 """"""""""""""" MESSING AROUND WITH DIRECTORIES """"""""""""""""""
@@ -240,7 +241,7 @@ endfunction
 vnoremap <C-a> :call Incr()<CR>
 
 " Tab shortcut
-inoremap <S-Tab> <C-V><Tab>
+"inoremap <S-Tab> <C-V><Tab>
 
 " Often type spit when I mean split. This autocorrects for me
 cnoreabbrev spit split
@@ -270,6 +271,12 @@ fun! <SID>StripTrailingWhitespaces()
     call cursor(l, c)
 endfun
 autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
+
+" color torte
+" color vividchalk
+" color peachpuff
+color morning
+"color delek
 
 " Use colors to signify if we're in insert mode or nor
 au InsertEnter * hi StatusLine ctermfg=Red
@@ -367,19 +374,22 @@ if empty(glob("~/.vim/autoload/plug.vim"))
     execute '!curl -fLo ~/.vim/autoload/plug.vim https://raw.github.com/junegunn/vim-plug/master/plug.vim'
 endif
 
-call plug#begin('~/.vim/bundle')
 "" Use <leader> then s to search for files
 let g:ctrlp_map = '<leader>s'
 
-Plug 'tpope/vim-fugitive'
+call plug#begin('~/.vim/bundle')
+
 Plug 'mckellyln/vim-rtags'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'rust-lang/rust.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'cespare/vim-toml', { 'branch': 'main' }
+Plug 'tpope/vim-fugitive'
 
 au FocusLost * :wa
 
 call plug#end()
+
 
 " Tab completion with rust coc
 inoremap <silent><expr> <TAB>
@@ -410,3 +420,20 @@ nmap <silent> gr <Plug>(coc-references)
 
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+nnoremap <silent> <leader>? :call CocAction('diagnosticInfo') <CR>
+nnoremap <silent> <leader>a :call CocAction('diagnosticRefresh') <CR>
+nnoremap <silent> <leader>q :call CocAction('diagnosticToggleBuffer') <CR>
+
+" Formatting selected code.
+"xmap ä  <Plug>(coc-format-selected)
+"nmap ä  <Plug>(coc-format-selected)
+
+hi MatchParen cterm=bold ctermbg=none ctermfg=red
+
+map <leader>t :RustTest<cr>
+
+compiler cargo
+map <leader>! :make run<cr>
+
+inoremap <S-Tab> <C-V><Tab>
