@@ -379,7 +379,7 @@ let g:ctrlp_map = '<leader>s'
 
 call plug#begin('~/.vim/bundle')
 
-Plug 'mckellyln/vim-rtags'
+"Plug 'mckellygit/vim-rtags'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'rust-lang/rust.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -417,13 +417,33 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gp <Plug>(coc-diagnostic-prev)
+nmap <silent> gn <Plug>(coc-diagnostic-next)
+" Use gk to show documentation in preview window.
+nnoremap <silent> gk :call ShowDocumentation()<CR>
 
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
+autocmd CursorHold * silent call CocActionAsync('highlight')
+nmap <leader>rr <Plug>(coc-rename)
 
 nnoremap <silent> <leader>? :call CocAction('diagnosticInfo') <CR>
 nnoremap <silent> <leader>a :call CocAction('diagnosticRefresh') <CR>
 nnoremap <silent> <leader>q :call CocAction('diagnosticToggleBuffer') <CR>
+
+"augroup mygroup
+"  autocmd!
+"  " Setup formatexpr specified filetype(s).
+"  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+"  " Update signature help on jump placeholder.
+"  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+"augroup end
 
 " Formatting selected code.
 "xmap ä  <Plug>(coc-format-selected)
@@ -437,3 +457,28 @@ compiler cargo
 map <leader>! :make run<cr>
 
 inoremap <S-Tab> <C-V><Tab>
+
+" Removes weird characters >4;2m
+" See https://stackoverflow.com/questions/62148994/strange-character-since-last-update-42m-in-vim
+let &t_TI = ""
+let &t_TE = ""
+
+"let g:node_client_debug = 1
+"let $NODE_CLIENT_LOG_FILE = '/home/torbjorn/.vim/coc-logfile'
+
+" Things I needed to do to get ra-multiplex working:
+"  - Upgrade to vim9
+"  - rustup default nightly
+"  - rustup component add rust-analyzer
+"  - ln -s /home/torbjorn/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rust-analyzer rust-analyzer
+"  - Inside vim: CocInstall coc-rust-analyzer
+"  - git clone --depth 1 https://github.com/pr2502/ra-multiplex.git
+"  - cd ra-multiplex; cargo build --release
+"  - mkdir ~/.config/ra-multiplex/
+"  - fill some defaults into ~/.config/ra-multiplex/config.toml. See github.com/pr2502/ra-multiplex for example
+"  - in .vim/coc-setting.json add: "rust-analyzer.serverPath": "/home/torbjorn/GithubRepos/ra-multiplex/target/release/ra-multiplex",
+"  - Among startup applications add /home/torbjorn/GithubRepos/ra-multiplex/target/release/ra-multiplex-server
+" Easy as pie!
+"
+" Then, it won't work with new files that aren't saved to disk. That will make coc crash.
+" So do :CocRestart if that happens...
