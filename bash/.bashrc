@@ -107,86 +107,89 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 if [ "$color_prompt" = yes ]; then
-PS1="${debian_chroot:+($debian_chroot)}\e[1;31m\u@arve[\w]\\$\e[m "
+  PS1="${debian_chroot:+($debian_chroot)}\e[1;31m\u[\w]\\$\e[m "
 else
   #changed the PS1 below on 6/14/08 for a color prompt
-  PS1='${debian_chroot:+($debian_chroot)}\[\e[1;32m\]\u@arve[\w]\\$\[\e[m\] '
+  PS1='${debian_chroot:+($debian_chroot)}\[\e[1;34m\]\u[\w]\\$\[\e[m\] '
 fi
 
-export OPENSCADPATH="/home/torbjorn/Desktop/VanityRepRap/Hangprinter/Thingiverse-Projects/ThreadedLibrary/"
-
-
-alias show='mupdf rap.pdf &'
-alias raptabs='gnome-terminal --tab --title "1 Vim Source" --tab --title "2 Generate/Collect data" --tab --title "3 Vim Gnuplot" --tab --title "4 Gnuplot" --tab --title "5 Vim rap.tex" --tab --title "6 make, git, mupdf"; exit'
-alias reptabs='raptabs'
-
-#alias firefox='start-tor-browser'
 alias vi='vim'
 alias e='vim'
+alias v='vim'
 alias scadopen='scadopen.sh'
-alias cc='/usr/lib/gcc-snapshot/bin/gcc -fdiagnostics-color'
 alias oct='octave --no-gui'
-alias lisp='emacs -nw --eval "(slime)"'
-alias slut='sudo shutdown -h now'
-
-# GTD related help scripts
-# Needed because of Norwegian names in GTD tickle directories
-export LC_TIME=nb_NO.utf8
-# Mails sent to future self through tickle system and calendar
-alias idag='cal; calendar -f ~/GTD/calendar.personal; echo;'
-# Remind me about my calendar
-idag
-
-
+alias f="find . -name"
+#alias lisp='emacs -nw --eval "(slime)"'
+#alias slut='sudo shutdown -h now'
 
 # Check which folders take up the most space here
 alias dirsizes='du -sh ./* | sort -h'
 #alias spacemacs='emacsclient -n -c'
-alias em='emacs'
 
-# Get quicker access to GTD
-alias In='vim /home/torbjorn/GTD/In'
-alias Göra='vim /home/torbjorn/GTD/Göra'
-alias Gøra='vim /home/torbjorn/GTD/Göra'
+# Locally built stuff
+PATH=$PATH:/home/torbjorn/.local/bin
 
 # These should go in .bash_profile, but that file is so hard to reload!
 PATH=$PATH:/home/torbjorn/scripts
-PATH=$PATH:/home/torbjorn/scripts/init-rapport:/home/torbjorn/scripts/init-physrap
-PATH=$PATH:/home/torbjorn/scripts/tor-browser_en-US
-# Roswell lisp organizer saves scripts here:
-export PATH=$PATH:$HOME/.roswell/bin
-export PATH=$PATH:~/bin
-export PATH=$PATH:/home/torbjorn/GithubRepos/rtags/bin
 
 # Needed to run Emacs as daemon, see
 # https://www.emacswiki.org/emacs/EmacsAsDaemon
 export ALTERNATE_EDITOR=""
 export EDITOR="vim"          # $EDITOR should open in terminal
-export VISUAL="gvim" # $VISUAL opens in GUI with non-daemon as alternate
+#export VISUAL="emacsclient -c -a emacs" # $VISUAL opens in GUI with non-daemon as alternate
 
 # Visualize git trees with git graphviz | dotty /dev/stdin
 alias gitgraph="git log --graph --oneline --decorate --date=relative --all"
-alias gl="git branch; git log --oneline | head"
-alias ccc="./compile.sh"
-alias ttt="./test.sh"
+alias gl="git branch; git log --oneline -n 10"
 
-# Get adb and fastboot from the Downloads directory
-#PATH=$PATH:/home/torbjorn/Downloads/platform-tools_r28.0.1-linux/platform-tools
+# For rdm and rc that is home-compiled
+PATH=$PATH:/home/torbjorn/Downloads/rtags/bin
+
+PATH=$PATH:.luarocks/bin/
+
+# For xtensa architecture toolchain. I'm not at all sure that I need it...
+PATH=$PATH:/home/torbjorn/repos/esp-open-sdk/xtensa-lx106-elf/bin
+
+# Required for building RRF
+#PATH=$PATH:/home/torbjorn/eclipse-workspace/RepRapFirmware/Tools/crc32appender/linux-x86_64
+#PATH=$PATH:/home/torbjorn/Downloads/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux/gcc-arm-none-eabi-10-2020-q4-major
+
+PATH=$PATH:~/.roswell/bin
+
+
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
-
-alias cdl="cd /home/torbjorn/GitlabRepos/line-collision-detector/"
-alias cdll="cd /home/torbjorn/GitlabRepos/line-collision-detector/linc/"
-alias cdlll="cd /home/torbjorn/GitlabRepos/line-collision-detector/linc/linc/"
-alias cdh="cd /home/torbjorn/GitlabRepos/hp-mark/"
-alias cdhh="cd /home/torbjorn/GitlabRepos/hp-mark/hpm/"
-alias cdhhh="cd /home/torbjorn/GitlabRepos/hp-mark/hpm/hpm/"
-alias cdhp="cd /home/torbjorn/GitlabRepos/hangprinter/src/"
-alias d="cd hpm/"
+# cd to previous directory in bash is `cd -`. Avoid the need for space.
+alias cd-="cd -"
+alias cdlinc="cd ~/repos/line-collision-detector/linc/linc"
+alias cdl="cd ~/repos/line-collision-detector/"
+alias cdll="cd ~/repos/line-collision-detector/linc/"
+alias cdlll="cd ~/repos/line-collision-detector/linc/linc/"
+alias cdhpm="cd ~/repos/hp-mark/hpm/hpm"
+alias cdh="cd ~/repos/hp-mark/"
+alias cdhu="cd ~/repos/hp-mark/use/"
+alias cdhh="cd ~/repos/hp-mark/hpm/"
+alias cdhhh="cd ~/repos/hp-mark/hpm/hpm/"
+alias cdhhhe="cd ~/repos/hp-mark/hpm/hpm/ed/"
+alias cdr="cd ~/eclipse-workspace/RepRapFirmware/"
+alias cdrs="cd ~/eclipse-workspace/RepRapFirmware/src/"
+alias cdrsm="cd ~/eclipse-workspace/RepRapFirmware/src/Movement/"
+alias cdrsmk="cd ~/eclipse-workspace/RepRapFirmware/src/Movement/Kinematics/"
+alias up="cd .."
 alias u="cd .."
-alias v="vim"
-alias f="find . -name"
-# Virtual Environment Wrapper
-alias workoncv-4.4="source ~/opt/OpenCV-4.4-py3/bin/activate"
+alias down="cd hpm"
+alias d="cd hpm"
+alias arve="ssh -p 56874 torbjorn@deltmot.asuscomm.com"
+alias cdblog="cd /home/torbjorn/repos/torbjornludvigsen-com/blog"
+alias ok_sound="paplay /usr/share/sounds/freedesktop/stereo/complete.oga"
+alias cdhp="cd ~/repos/hangprinter/src"
+alias cdhpf="cd ~/repos/hangprinter/firmware/RepRapFirmware/Duet3"
 . "$HOME/.cargo/env"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export CHALK_SOLVER_MAX_SIZE=20
+export CHALK_OVERFLOW_DEPTH=30000

@@ -12,6 +12,7 @@
   "rust-analyzer.enable": true,
   "rust-analyzer.diagnostics.enable": true,
   "rust-analyzer.inlayHints.enable": false,
+  "rust-analyzer.diagnostics.disabled": ["inactive_code"],
   "rust-analyzer.serverPath": "/home/torbjorn/repos/ra-multiplex/target/release/ra-multiplex",
   "rust-analyzer.checkOnSave.enable": true,
   "rust-analyzer.trace.server": "verbose",
