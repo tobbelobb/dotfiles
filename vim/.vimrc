@@ -365,9 +365,11 @@ map <F4> :e %:p:s,.h++$,.X123X,:s,.c++$,.h++,:s,.X123X$,.c++,<CR>
 set path+=**
 set wildmenu
 set wildmode=longest:full
+set wildignore+=*.lock
 
 let mapleader = " "
 
+" Copy paste preserve
 autocmd VimLeave * call system("xsel -ib", getreg('+'))
 
 if empty(glob("~/.vim/autoload/plug.vim"))
@@ -421,6 +423,8 @@ nmap <silent> gp <Plug>(coc-diagnostic-prev)
 nmap <silent> gn <Plug>(coc-diagnostic-next)
 " Use gk to show documentation in preview window.
 nnoremap <silent> gk :call ShowDocumentation()<CR>
+" Use gb to open documentation in browser.
+nnoremap <silent> gb :CocCommand rust-analyzer.openDocs<CR>
 
 function! ShowDocumentation()
   if CocAction('hasProvider', 'hover')
@@ -463,6 +467,19 @@ inoremap <S-Tab> <C-V><Tab>
 let &t_TI = ""
 let &t_TE = ""
 
+" Toggle background transparency
+let g:isTransparent = 0
+function! BGToggleTransparency()
+  if g:isTransparent == 1
+    let g:isTransparent = 0
+    execute 'color ' g:colors_name
+  else
+    hi Normal guibg=NONE ctermbg=NONE
+    let g:isTransparent = 1
+  endif
+endfunction
+nnoremap <C-x><C-t> :call BGToggleTransparency()<CR>
+
 "let g:node_client_debug = 1
 "let $NODE_CLIENT_LOG_FILE = '/home/torbjorn/.vim/coc-logfile'
 
@@ -476,8 +493,8 @@ let &t_TE = ""
 "  - cd ra-multiplex; cargo build --release
 "  - mkdir ~/.config/ra-multiplex/
 "  - fill some defaults into ~/.config/ra-multiplex/config.toml. See github.com/pr2502/ra-multiplex for example
-"  - in .vim/coc-setting.json add: "rust-analyzer.serverPath": "/home/torbjorn/GithubRepos/ra-multiplex/target/release/ra-multiplex",
-"  - Among startup applications add /home/torbjorn/GithubRepos/ra-multiplex/target/release/ra-multiplex-server
+"  - in .vim/coc-setting.json add: "rust-analyzer.serverPath": "/home/torbjorn/repos/ra-multiplex/target/release/ra-multiplex",
+"  - Among startup applications add /home/torbjorn/repos/ra-multiplex/target/release/ra-multiplex-server
 " Easy as pie!
 "
 " Then, it won't work with new files that aren't saved to disk. That will make coc crash.

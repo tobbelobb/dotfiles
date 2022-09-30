@@ -193,3 +193,5 @@ export NVM_DIR="$HOME/.nvm"
 
 export CHALK_SOLVER_MAX_SIZE=20
 export CHALK_OVERFLOW_DEPTH=30000
+# Avoid having to tab twice when opening Cargo.toml
+export FIGNORE=".lock"
